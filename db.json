@@ -39,5 +39,21 @@
       "id": 1,
       "text": "Stay hydrated! Aim to drink at least 8 glasses of water per day."
     }
+  ],
+  "appointments": [
+    {
+      "id": 6,
+      "doctorName": "asdf",
+      "date": "2025-11-14",
+      "diseaseName": "asdf",
+      "status": "scheduled"
+    },
+    {
+      "id": 2,
+      "doctorName": "asdf",
+      "date": "2025-11-20",
+      "diseaseName": "asdf",
+      "status": "scheduled"
+    }
   ]
 }
