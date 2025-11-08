@@ -7,7 +7,6 @@ import Messages from "./components/dashboard/Messages";
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
 import ForgotPassword from "./pages/auth/ForgotPassword";
-import Sidebar from "./components/dashboard/Sidebar";
 import "./App.css";
 import Index from "./components/home/Index";
 import Sidebar from "./components/dashboard/Sidebar";
