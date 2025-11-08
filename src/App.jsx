@@ -14,10 +14,10 @@ function App() {
         {/* <Route path="/" element={<Sidebar />} /> */}
         <Route path="/" element={<Index />} />
         <Route path="/user/" element={<Sidebar />}>
-        <Route path="/user/dashboard" element={<Dashboard />} />
-        <Route path="/user/my-profile" element={<MyProfile />} />
-        <Route path="/user/welness-goals" element={<WelnessGoals />} />
-        <Route path="/user/messages" element={<Messages />} />
+          <Route path="/user/dashboard" element={<Dashboard />} />
+          <Route path="/user/my-profile" element={<MyProfile />} />
+          <Route path="/user/welness-goals" element={<WelnessGoals />} />
+          <Route path="/user/messages" element={<Messages />} />
         </Route>
       </Routes>
     </BrowserRouter>
