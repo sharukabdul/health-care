@@ -8,7 +8,7 @@ import Typography from '@mui/material/Typography';
 import MenuIcon from '@mui/icons-material/Menu';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
-// import ResponsiveSidebar from './ResponsiveSidebar';
+import ResponsiveSidebar from './ResponsiveSidebar';
 
 const drawerWidth = 230;
 
@@ -42,11 +42,11 @@ export default function Sidebar() {
       )}
 
       {/* Sidebar component handles both permanent and temporary Drawer */}
-      {/* <ResponsiveSidebar
+      <ResponsiveSidebar
         drawerWidth={drawerWidth}
         mobileOpen={mobileOpen}
         onClose={handleDrawerToggle}
-      /> */}
+      />
 
       {/* Main content area:
           - On md+ add left margin equal to drawerWidth so content won't be overlapped
