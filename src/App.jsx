@@ -5,7 +5,7 @@ import MyProfile from './components/dashboard/MyProfile';
 import WelnessGoals from './components/dashboard/WelnessGoals';
 import Messages from './components/dashboard/Messages';
 import Index from './components/home/Index';
-import Sidebar from './components/dashboard/Sidebar';
+// import Sidebar from './components/dashboard/Sidebar';
 
 function App() {
   return (

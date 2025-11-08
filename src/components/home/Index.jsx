@@ -40,10 +40,10 @@ const Index = () => {
                 <Toolbar>
                     <Grid container alignItems="center" className="home__header-logo">
                         <Grid item>
-                            <Favorite sx={{ fontSize: 32, color: 'primary.main' }} />
+                            <Favorite sx={{ fontSize: 32, color: 'primary.contrastText' }} />
                         </Grid>
                         <Grid item>
-                            <FormLabel component="div" sx={{ fontSize: '1.25rem', fontWeight: 'bold', color: 'primary.main' }}>
+                            <FormLabel component="div" sx={{ fontSize: '1.25rem', fontWeight: 'bold', color: 'primary.contrastText' }}>
                                 HealthCare+
                             </FormLabel>
                         </Grid>
@@ -223,8 +223,6 @@ const Index = () => {
                                         <Grid container direction="column" spacing={2}>
                                             <Grid item className="home__services-card-icon">
                                                 {service.icon}
-                                            </Grid>
-                                            <Grid item>
                                                 <FormLabel component="h3" sx={{
                                                     display: 'block',
                                                     fontSize: '1.25rem',
@@ -247,10 +245,10 @@ const Index = () => {
                         ))}
                     </Grid>
                 </Container>
-            </Grid>
+            </Grid >
 
             {/* Why Choose Us */}
-            <Grid container id="about" className="home__benefits">
+            < Grid container id="about" className="home__benefits" >
                 <Container maxWidth="lg">
                     <Grid container direction="column" alignItems="center" sx={{ mb: 6 }}>
                         <Grid item>
@@ -309,10 +307,10 @@ const Index = () => {
                         ))}
                     </Grid>
                 </Container>
-            </Grid>
+            </Grid >
 
             {/* CTA Section */}
-            <Grid container className="home__cta">
+            < Grid container className="home__cta" >
                 <Container maxWidth="md">
                     <Grid container direction="column" alignItems="center" spacing={3}>
                         <Grid item>
@@ -349,10 +347,10 @@ const Index = () => {
                         </Grid>
                     </Grid>
                 </Container>
-            </Grid>
+            </Grid >
 
             {/* Footer */}
-            <Grid container id="contact" component="footer" className="home__footer">
+            < Grid container id="contact" component="footer" className="home__footer" >
                 <Container maxWidth="lg">
                     <Grid container spacing={2}>
                         <Grid item xs={12} md={3}>
@@ -467,8 +465,8 @@ const Index = () => {
                         </Grid>
                     </Grid>
                 </Container>
-            </Grid>
-        </div>
+            </Grid >
+        </div >
     );
 };
 
