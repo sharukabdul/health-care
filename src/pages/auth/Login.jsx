@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
-import { Favorite, Menu, Visibility, VisibilityOff } from "@mui/icons-material";
+import { Favorite, Menu } from "@mui/icons-material";
 import {
   TextField,
   Button,
@@ -20,6 +20,7 @@ import {
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 import AuthLayout from "../../components/auth/AuthLayout";
 
 const LoginSchema = Yup.object({
@@ -31,27 +32,20 @@ const LoginSchema = Yup.object({
 
 const Login = () => {
   const navigate = useNavigate();
-  const [showPwd, setShowPwd] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [showPwd, setShowPwd] = React.useState(false);
+  const initialValues = { email: "", password: "" };
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
-
-  const initialValues = { email: "", password: "" };
-
-  // ✅ Auto-redirect if already logged in
-  useEffect(() => {
-    const user = localStorage.getItem("auth:user");
-    if (user) {
-      navigate("/user/dashboard", { replace: true });
-    }
-  }, [navigate]);
-
   return (
     <>
-      {/* ---------- Header ---------- */}
-      <AppBar position="sticky" color="inherit" elevation={0}>
+      <AppBar
+        position="sticky"
+        color="inherit"
+        elevation={0}
+        className="home__header"
+      >
         <Toolbar>
-          <Grid container alignItems="center">
+          <Grid container alignItems="center" className="home__header-logo">
             <Grid item>
               <Favorite sx={{ fontSize: 32, color: "primary.contrastText" }} />
             </Grid>
@@ -84,8 +78,6 @@ const Login = () => {
           )}
         </Toolbar>
       </AppBar>
-
-      {/* ---------- Login Form ---------- */}
       <AuthLayout
         title="Login"
         subtitle={
@@ -106,21 +98,17 @@ const Login = () => {
           initialValues={initialValues}
           validationSchema={LoginSchema}
           onSubmit={(values, actions) => {
-            // ✅ Simulate login API and save user info to localStorage
-            const userData = {
-              email: values.email,
-              role: "user", // change to 'doctor' if login is for doctor
-              name: values.email.split("@")[0],
-              loggedInAt: new Date().toISOString(),
-            };
-
-            // Store user details in localStorage
-            localStorage.setItem("auth:user", JSON.stringify(userData));
-
-            // Redirect to dashboard
-            navigate("/user/dashboard", { replace: true });
-
+            // Decide role from registration saved in localStorage
+            const stored = localStorage.getItem("auth:user");
+            let role = "user";
+            if (stored) {
+              try {
+                const parsed = JSON.parse(stored);
+                if (parsed && parsed.role) role = parsed.role;
+              } catch {}
+            }
             actions.setSubmitting(false);
+            navigate(role === "doctor" ? "/doctor" : "/user");
           }}
         >
           {({
@@ -196,20 +184,22 @@ const Login = () => {
                   size="large"
                   disabled={isSubmitting}
                 >
-                  {isSubmitting ? "Signing in..." : "Login"}
+                  Login
                 </Button>
               </Box>
             </Form>
           )}
         </Formik>
       </AuthLayout>
-
-      {/* ---------- Footer ---------- */}
-      <Grid container component="footer" className="home__footer">
+      <Grid container id="contact" component="footer" className="home__footer">
         <Container maxWidth="lg">
           <Grid container spacing={2}>
             <Grid item xs={12} md={3}>
-              <Grid container direction="column">
+              <Grid
+                container
+                direction="column"
+                className="home__footer-section"
+              >
                 <Grid
                   item
                   container
@@ -241,85 +231,134 @@ const Login = () => {
                 </Grid>
               </Grid>
             </Grid>
-
             <Grid item xs={12} md={3}>
-              <FormLabel
-                component="h4"
-                sx={{ fontWeight: 600, mb: 2, color: "text.primary" }}
+              <Grid
+                container
+                direction="column"
+                className="home__footer-section"
               >
-                Services
-              </FormLabel>
-              <List>
-                {[
-                  "Primary Care",
-                  "Specialist Consultations",
-                  "Emergency Services",
-                  "Preventive Care",
-                ].map((item) => (
-                  <ListItem key={item} sx={{ py: 0.5 }}>
-                    <FormLabel
-                      component="span"
-                      sx={{ color: "text.secondary" }}
-                    >
-                      {item}
-                    </FormLabel>
-                  </ListItem>
-                ))}
-              </List>
+                <Grid item>
+                  <FormLabel
+                    component="h4"
+                    sx={{
+                      fontWeight: 600,
+                      color: "text.primary",
+                      mb: 2,
+                      display: "block",
+                    }}
+                  >
+                    Services
+                  </FormLabel>
+                </Grid>
+                <Grid item>
+                  <List>
+                    {[
+                      "Primary Care",
+                      "Specialist Consultations",
+                      "Emergency Services",
+                      "Preventive Care",
+                    ].map((item) => (
+                      <ListItem key={item} sx={{ py: 0.5 }}>
+                        <FormLabel
+                          component="span"
+                          sx={{ color: "text.secondary" }}
+                        >
+                          {item}
+                        </FormLabel>
+                      </ListItem>
+                    ))}
+                  </List>
+                </Grid>
+              </Grid>
             </Grid>
-
             <Grid item xs={12} md={3}>
-              <FormLabel
-                component="h4"
-                sx={{ fontWeight: 600, mb: 2, color: "text.primary" }}
+              <Grid
+                container
+                direction="column"
+                className="home__footer-section"
               >
-                Company
-              </FormLabel>
-              <List>
-                {["About Us", "Our Team", "Careers", "Contact"].map((item) => (
-                  <ListItem key={item} sx={{ py: 0.5 }}>
-                    <FormLabel
-                      component="span"
-                      sx={{ color: "text.secondary" }}
-                    >
-                      {item}
-                    </FormLabel>
-                  </ListItem>
-                ))}
-              </List>
+                <Grid item>
+                  <FormLabel
+                    component="h4"
+                    sx={{
+                      fontWeight: 600,
+                      color: "text.primary",
+                      mb: 2,
+                      display: "block",
+                    }}
+                  >
+                    Company
+                  </FormLabel>
+                </Grid>
+                <Grid item>
+                  <List>
+                    {["About Us", "Our Team", "Careers", "Contact"].map(
+                      (item) => (
+                        <ListItem key={item} sx={{ py: 0.5 }}>
+                          <FormLabel
+                            component="span"
+                            sx={{ color: "text.secondary" }}
+                          >
+                            {item}
+                          </FormLabel>
+                        </ListItem>
+                      )
+                    )}
+                  </List>
+                </Grid>
+              </Grid>
             </Grid>
-
             <Grid item xs={12} md={3}>
-              <FormLabel
-                component="h4"
-                sx={{ fontWeight: 600, mb: 2, color: "text.primary" }}
+              <Grid
+                container
+                direction="column"
+                className="home__footer-section"
               >
-                Contact
-              </FormLabel>
-              <List>
-                {[
-                  "123 Healthcare Ave",
-                  "Medical City, MC 12345",
-                  "Phone: (555) 123-4567",
-                  "Email: info@healthcareplus.com",
-                ].map((item) => (
-                  <ListItem key={item} sx={{ py: 0.5 }}>
-                    <FormLabel
-                      component="span"
-                      sx={{ color: "text.secondary" }}
-                    >
-                      {item}
-                    </FormLabel>
-                  </ListItem>
-                ))}
-              </List>
+                <Grid item>
+                  <FormLabel
+                    component="h4"
+                    sx={{
+                      fontWeight: 600,
+                      color: "text.primary",
+                      mb: 2,
+                      display: "block",
+                    }}
+                  >
+                    Contact
+                  </FormLabel>
+                </Grid>
+                <Grid item>
+                  <List>
+                    {[
+                      "123 Healthcare Ave",
+                      "Medical City, MC 12345",
+                      "Phone: (555) 123-4567",
+                      "Email: info@healthcareplus.com",
+                    ].map((item) => (
+                      <ListItem key={item} sx={{ py: 0.5 }}>
+                        <FormLabel
+                          component="span"
+                          sx={{ color: "text.secondary" }}
+                        >
+                          {item}
+                        </FormLabel>
+                      </ListItem>
+                    ))}
+                  </List>
+                </Grid>
+              </Grid>
             </Grid>
           </Grid>
-
-          <Grid container justifyContent="center" sx={{ mt: 3 }}>
-            <FormLabel component="p" sx={{ color: "text.secondary" }}>
-              © {new Date().getFullYear()} HealthCare+. All rights reserved.
-            </FormLabel>
+          <Grid
+            container
+            justifyContent="center"
+            className="home__footer-copyright"
+          >
+            <Grid item>
+              <FormLabel component="p" sx={{ color: "text.secondary" }}>
+                © 2024 HealthCare+. All rights reserved.
+              </FormLabel>
+            </Grid>
           </Grid>
         </Container>
       </Grid>
