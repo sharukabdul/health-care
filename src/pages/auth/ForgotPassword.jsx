@@ -1,6 +1,6 @@
 import React from "react";
 import { Formik, Form } from "formik";
-import * as Yup from "Yup";
+import * as Yup from "yup";
 import { TextField, Button, Alert, Box, Link } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
 import AuthLayout from "../../components/auth/AuthLayout";

@@ -4,6 +4,9 @@ import Dashboard from "./components/dashboard/Dashboard";
 import MyProfile from "./components/dashboard/MyProfile";
 import WelnessGoals from "./components/dashboard/WelnessGoals";
 import Messages from "./components/dashboard/Messages";
+import Login from "./pages/auth/Login";
+import Register from "./pages/auth/Register";
+import ForgotPassword from "./pages/auth/ForgotPassword";
 import Sidebar from "./components/dashboard/Sidebar";
 
 function App() {

@@ -1,25 +1,20 @@
 import React from "react";
 import { Formik, Form } from "formik";
-import * as Yup from "Yup";
+import * as Yup from "yup";
 import {
   TextField,
   Button,
   Typography,
   Link,
   Box,
-  RadioGroup,
-  Radio,
-  FormControlLabel,
-  FormControl,
-  FormLabel,
+  InputAdornment,
+  IconButton,
 } from "@mui/material";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 import AuthLayout from "../../components/auth/AuthLayout";
 
 const LoginSchema = Yup.object({
-  role: Yup.string()
-    .oneOf(["doctor", "user"], "Select a role")
-    .required("Role is required"),
   email: Yup.string()
     .email("Enter a valid email")
     .required("Email is required"),
@@ -28,7 +23,8 @@ const LoginSchema = Yup.object({
 
 const Login = () => {
   const navigate = useNavigate();
-  const initialValues = { role: "user", email: "", password: "" };
+  const [showPwd, setShowPwd] = React.useState(false);
+  const initialValues = { email: "", password: "" };
 
   return (
     <AuthLayout
@@ -51,11 +47,17 @@ const Login = () => {
         initialValues={initialValues}
         validationSchema={LoginSchema}
         onSubmit={(values, actions) => {
-          // TODO: integrate API
-          console.log("login:", values);
+          // Decide role from registration saved in localStorage
+          const stored = localStorage.getItem("auth:user");
+          let role = "user";
+          if (stored) {
+            try {
+              const parsed = JSON.parse(stored);
+              if (parsed && parsed.role) role = parsed.role;
+            } catch {}
+          }
           actions.setSubmitting(false);
-          // Role-based navigation (demo)
-          navigate(values.role === "doctor" ? "/doctor" : "/user");
+          navigate(role === "doctor" ? "/doctor" : "/user");
         }}
       >
         {({
@@ -67,32 +69,6 @@ const Login = () => {
           isSubmitting,
         }) => (
           <Form noValidate>
-            <FormControl sx={{ mt: 1 }}>
-              <FormLabel>User Type</FormLabel>
-              <RadioGroup
-                row
-                name="role"
-                value={values.role}
-                onChange={handleChange}
-              >
-                <FormControlLabel
-                  value="user"
-                  control={<Radio color="primary" />}
-                  label="User"
-                />
-                <FormControlLabel
-                  value="doctor"
-                  control={<Radio color="primary" />}
-                  label="Doctor"
-                />
-              </RadioGroup>
-            </FormControl>
-            {touched.role && errors.role && (
-              <Typography variant="caption" color="error">
-                {errors.role}
-              </Typography>
-            )}
-
             <TextField
               fullWidth
               margin="normal"
@@ -110,12 +86,25 @@ const Login = () => {
               margin="normal"
               label="Password"
               name="password"
-              type="password"
+              type={showPwd ? "text" : "password"}
               value={values.password}
               onChange={handleChange}
               onBlur={handleBlur}
               error={touched.password && Boolean(errors.password)}
               helperText={touched.password && errors.password}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      onClick={() => setShowPwd((s) => !s)}
+                      edge="end"
+                      aria-label="toggle password visibility"
+                    >
+                      {showPwd ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
             />
 
             <Box
