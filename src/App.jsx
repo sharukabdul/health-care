@@ -1,15 +1,20 @@
 import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Dashboard from "./components/dashboard/Dashboard";
-import MyProfile from "./components/dashboard/MyProfile";
-import WelnessGoals from "./components/dashboard/WelnessGoals";
-import Messages from "./components/dashboard/Messages";
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
 import ForgotPassword from "./pages/auth/ForgotPassword";
 import "./App.css";
 import Index from "./components/home/Index";
 import Sidebar from "./components/dashboard/Sidebar";
+import "./App.css";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Dashboard from "./components/dashboard/Dashboard";
+import MyProfile from "./components/dashboard/MyProfile";
+import WelnessGoals from "./components/dashboard/WelnessGoals";
+import Messages from "./components/dashboard/Messages";
+import Index from "./components/home/Index";
+import Sidebar from "./components/dashboard/Sidebar";
+import Appointment from "./components/appointments/Appointment";
 
 function App() {
   const RoleLanding = ({ role }) => (
@@ -32,6 +37,7 @@ function App() {
           <Route path="/user/my-profile" element={<MyProfile />} />
           <Route path="/user/welness-goals" element={<WelnessGoals />} />
           <Route path="/user/messages" element={<Messages />} />
+          <Route path="/user/appointments" element={<Appointment />} />
         </Route>
       </Routes>
     </BrowserRouter>
