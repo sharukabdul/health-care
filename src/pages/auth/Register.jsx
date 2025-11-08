@@ -104,7 +104,10 @@ const Register = () => {
                   fontSize: "1.25rem",
                   fontWeight: "bold",
                   color: "primary.contrastText",
+                  cursor: "pointer",
+                  "&:hover": { opacity: 0.8 },
                 }}
+                onClick={() => navigate("/")}
               >
                 HealthCare+
               </FormLabel>
