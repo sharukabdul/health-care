@@ -5,19 +5,20 @@ import MyProfile from './components/dashboard/MyProfile';
 import WelnessGoals from './components/dashboard/WelnessGoals';
 import Messages from './components/dashboard/Messages';
 import Index from './components/home/Index';
-// import Sidebar from './components/dashboard/Sidebar';
+import Sidebar from './components/dashboard/Sidebar';
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* <Route path="/" element={<Sidebar />}> */}
+        {/* <Route path="/" element={<Sidebar />} /> */}
         <Route path="/" element={<Index />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/my-profile" element={<MyProfile />} />
-        <Route path="/welness-goals" element={<WelnessGoals />} />
-        <Route path="/messages" element={<Messages />} />
-        {/* </Route> */}
+        <Route path="/user/" element={<Sidebar />}>
+        <Route path="/user/dashboard" element={<Dashboard />} />
+        <Route path="/user/my-profile" element={<MyProfile />} />
+        <Route path="/user/welness-goals" element={<WelnessGoals />} />
+        <Route path="/user/messages" element={<Messages />} />
+        </Route>
       </Routes>
     </BrowserRouter>
   );
