@@ -11,10 +11,11 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Sidebar />}>
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/my-profile" element={<MyProfile />} />
-          <Route path="/welness-goals" element={<WelnessGoals />} />
-          <Route path="/messages" element={<Messages />} />
+          <Route index element={<Dashboard />} />
+          <Route path="dashboard" element={<Dashboard />} />
+          <Route path="my-profile" element={<MyProfile />} />
+          <Route path="welness-goals" element={<WelnessGoals />} />
+          <Route path="messages" element={<Messages />} />
         </Route>
       </Routes>
     </BrowserRouter>
