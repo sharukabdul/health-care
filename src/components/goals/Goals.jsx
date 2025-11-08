@@ -23,15 +23,15 @@ import {
 import { Add as AddIcon, Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material';
 import { useForm, Controller } from 'react-hook-form';
 import { format } from 'date-fns';
-import './Appointment.scss';
+import './Goals.scss';
 import axios from 'axios';
 import { API_BASE_URL } from '../../constants/Api';
 
-const Appointment = () => {
+const Goal = () => {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
     const [openDialog, setOpenDialog] = useState(false);
-    const [appointments, setAppointments] = useState([]);
+    const [goals, setGoals] = useState([]);
 
     const [editing, setEditing] = useState({
         isEditing: false,
@@ -45,25 +45,24 @@ const Appointment = () => {
         formState: { errors },
     } = useForm({
         defaultValues: {
-            patientName: '',
-            email: '',
-            date: '',
             steps: null,
-            water: null,
+            date: '',
+            waterIntake: '',
+            email: ''
         },
     });
 
     useEffect(() => {
-        fetchAppointments();
+        fetchGoals();
     }, []);
 
-    const fetchAppointments = async () => {
+    const fetchGoals = async () => {
         try {
-            const response = await axios.get(`${API_BASE_URL}/appointments`);
-            setAppointments(response?.data ?? []);
+            const response = await axios.get(`${API_BASE_URL}/goals`);
+            setGoals(response?.data ?? []);
         } catch (error) {
             console.error(error);
-            alert('Error fetching appointments');
+            alert('Error fetching goals');
         }
     };
 
@@ -76,15 +75,15 @@ const Appointment = () => {
 
     const handleOpenDialog = () => {
         setEditing({ isEditing: false, record: null });
-        reset({ patientName: '', email: '', date: '', water: null, steps: null });
+        reset({ steps: null, date: '', waterIntake: '' });
         setOpenDialog(true);
     };
 
     const handleCloseDialog = () => setOpenDialog(false);
 
     const getNextId = () => {
-        if (!appointments || appointments.length === 0) return 1;
-        const maxId = appointments.reduce((max, a) => (Number(a.id) > max ? Number(a.id) : max), 0);
+        if (!goals || goals.length === 0) return 1;
+        const maxId = goals.reduce((max, a) => (Number(a.id) > max ? Number(a.id) : max), 0);
         return maxId + 1;
     };
 
@@ -96,26 +95,36 @@ const Appointment = () => {
                     ...data,
                     date: data.date, // keep as YYYY-MM-DD
                 };
-                const res = await axios.put(`${API_BASE_URL}/appointments/${editing.record.id}`, payload);
+                const res = await axios.put(`${API_BASE_URL}/goals/${editing.record.id}`, payload);
                 if (!res) {
                     alert('Error updating appointment');
                     return;
                 }
             } else {
                 // CREATE with client-generated id (json-server)
-                const newAppointment = {
+                const newGoal = {
                     id: getNextId(),
                     ...data,
                     status: 'scheduled',
                     date: data.date,
                 };
-                const res = await axios.post(`${API_BASE_URL}/appointments`, newAppointment);
-                if (!res) {
-                    alert('Error adding appointment');
-                    return;
+                const res = await axios.post(`${API_BASE_URL}/goals`, newGoal);
+
+
+                let patientGoals = await axios.get(`${API_BASE_URL}/appointments`);
+                patientGoals = patientGoals?.data?.map(e => e.email === newGoal.email) || [];
+                if (patientGoals) {
+                    const patientGoal = patientGoals.find(e => e.date === newGoal.date);
+                    console.log(patientGoal)
+                    const newAppointment = {
+                        ...patientGoal,
+                        status: 'Achieved',
+                    };
+                    const res = await axios.patch(`${API_BASE_URL}/appointments/${patientGoal.id}`, newAppointment);
+
                 }
             }
-            await fetchAppointments();
+            await fetchGoals();
             handleCloseDialog();
         } catch (error) {
             console.error(error);
@@ -136,18 +145,17 @@ const Appointment = () => {
 
         setEditing({ isEditing: true, record: appt });
         reset({
-            email: appt.email || '',
-            patientName: appt.patientName || '',
+            steps: appt.steps,
             date: dateForInput,
-            water: appt.water,
-            steps: appt.steps
+            waterIntake: appt.waterIntake || '',
+            email: appt.email || ''
         });
         setOpenDialog(true);
     };
 
     const handleDelete = async (appt) => {
         const ok = window.confirm(
-            `Delete Goal of ${appt.patientName} on ${(() => {
+            `Delete appointment with Dr. ${appt.steps} on ${(() => {
                 try {
                     return format(new Date(appt.date), 'MMM dd, yyyy');
                 } catch {
@@ -158,16 +166,16 @@ const Appointment = () => {
         if (!ok) return;
 
         try {
-            const res = await axios.delete(`${API_BASE_URL}/appointments/${appt.id}`);
+            const res = await axios.delete(`${API_BASE_URL}/goals/${appt.id}`);
             if (!res) {
-                alert('Error deleting patient goal');
+                alert('Error deleting appointment');
                 return;
             }
             // Optimistic local update
-            setAppointments((prev) => prev.filter((a) => a.id !== appt.id));
+            setGoals((prev) => prev.filter((a) => a.id !== appt.id));
         } catch (error) {
             console.error(error);
-            alert('Error deleting patient goal');
+            alert('Error deleting appointment');
         }
     };
 
@@ -185,39 +193,37 @@ const Appointment = () => {
     };
 
     return (
-        <div className="appointments">
-            <Grid container className="appointments__header" justifyContent="space-between" alignItems="center">
+        <div className="goals">
+            <Grid container className="goals__header" justifyContent="space-between" alignItems="center">
                 <Grid item>
-                    <h2 className="appointments__header-title">Patients</h2>
+                    <h2 className="goals__header-title">Goals</h2>
                 </Grid>
                 <Grid item>
                     <Button variant="contained" color="primary" startIcon={<AddIcon />} onClick={handleOpenDialog}>
-                        Add Patient Goal
+                        Add Goal
                     </Button>
                 </Grid>
             </Grid>
 
-            <TableContainer component={Paper} className="appointments__table">
+            <TableContainer component={Paper} className="goals__table">
                 <Table>
                     <TableHead>
-                        <TableRow className="appointments__table-header">
-                            <TableCell>Patient Name</TableCell>
-                            <TableCell>Email</TableCell>
-                            <TableCell>Date</TableCell>
+                        <TableRow className="goals__table-header">
                             <TableCell>Steps</TableCell>
                             <TableCell>Water Intake</TableCell>
-                            <TableCell>Status</TableCell>
+                            <TableCell>Date</TableCell>
+
                             <TableCell align="right">Actions</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {appointments
+                        {goals
                             .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                             .map((appointment) => (
-                                <TableRow key={appointment.id} className="appointments__table-row">
-                                    <TableCell className="appointments__table-cell">{appointment.patientName}</TableCell>
-                                    <TableCell className="appointments__table-cell">{appointment.email}</TableCell>
-                                    <TableCell className="appointments__table-cell">
+                                <TableRow key={appointment.id} className="goals__table-row">
+                                    <TableCell className="goals__table-cell">{appointment.steps}</TableCell>
+                                    <TableCell className="goals__table-cell">{appointment.waterIntake}</TableCell>
+                                    <TableCell className="goals__table-cell">
                                         {(() => {
                                             try {
                                                 return format(new Date(appointment.date), 'MMM dd, yyyy');
@@ -226,15 +232,13 @@ const Appointment = () => {
                                             }
                                         })()}
                                     </TableCell>
-                                    <TableCell className="appointments__table-cell">{appointment.steps}</TableCell>
-                                    <TableCell className="appointments__table-cell">{appointment.water}</TableCell>
-                                    <TableCell className="appointments__table-cell">
+                                    {/* <TableCell className="goals__table-cell">
                                         <Chip
                                             label={appointment.status}
                                             color={getStatusChipColor(appointment.status)}
-                                            className={`appointments__table-status appointments__table-status--${appointment.status}`}
+                                            className={`goals__table-status goals__table-status--${appointment.status}`}
                                         />
-                                    </TableCell>
+                                    </TableCell> */}
                                     <TableCell align="right">
                                         <Stack direction="row" spacing={1} justifyContent="flex-end">
                                             <Tooltip title="Edit">
@@ -256,7 +260,7 @@ const Appointment = () => {
                 <TablePagination
                     rowsPerPageOptions={[5, 10, 25]}
                     component="div"
-                    count={appointments.length}
+                    count={goals.length}
                     rowsPerPage={rowsPerPage}
                     page={page}
                     onPageChange={handleChangePage}
@@ -267,38 +271,43 @@ const Appointment = () => {
             <Dialog open={openDialog} onClose={handleCloseDialog} maxWidth="sm" fullWidth className="appointment-form">
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <DialogTitle className="appointment-form__title">
-                        {editing.isEditing ? 'Edit Patient Goal' : 'Add Patient Goal'}
+                        {editing.isEditing ? 'Edit Goal' : 'Add New Goal'}
                     </DialogTitle>
                     <DialogContent className="appointment-form__content">
+
                         <Controller
-                            name="patientName"
+                            name="steps"
                             control={control}
-                            rules={{ required: 'Patient name is required' }}
+                            rules={{ required: 'Steps is required' }}
                             render={({ field }) => (
                                 <div className="appointment-form__field">
                                     <TextField
                                         {...field}
-                                        label="Patient Name"
+                                        label="Steps"
+                                        type='number'
                                         fullWidth
-                                        error={!!errors.patientName}
-                                        helperText={errors.patientName?.message}
+                                        error={!!errors.steps}
+                                        helperText={errors.steps?.message}
                                     />
                                 </div>
                             )}
                         />
+
+
+
                         <Controller
-                            name="email"
+                            name="waterIntake"
                             control={control}
-                            rules={{ required: 'Email is required' }}
+                            rules={{ required: 'Water Intake is required' }}
                             render={({ field }) => (
                                 <div className="appointment-form__field">
                                     <TextField
                                         {...field}
-                                        label="Email"
-                                        type="email"
+                                        label="Water Intake"
+                                        type='number'
                                         fullWidth
-                                        error={!!errors.eamil}
-                                        helperText={errors.email?.message}
+                                        error={!!errors.waterIntake}
+                                        helperText={errors.waterIntake?.message}
                                     />
                                 </div>
                             )}
@@ -320,7 +329,7 @@ const Appointment = () => {
                                 <div className="appointment-form__field">
                                     <TextField
                                         {...field}
-                                        label="Date"
+                                        label="Goal Date"
                                         type="date"
                                         fullWidth
                                         InputLabelProps={{ shrink: true }}
@@ -333,35 +342,18 @@ const Appointment = () => {
                         />
 
                         <Controller
-                            name="steps"
+                            name="email"
                             control={control}
-                            rules={{ required: 'Steps is required' }}
+                            rules={{ required: 'Email is required' }}
                             render={({ field }) => (
                                 <div className="appointment-form__field">
                                     <TextField
                                         {...field}
-                                        label="Steps"
-                                        type="number"
+                                        label="Email"
+                                        type='email'
                                         fullWidth
                                         error={!!errors.steps}
                                         helperText={errors.steps?.message}
-                                    />
-                                </div>
-                            )}
-                        />
-                        <Controller
-                            name="water"
-                            control={control}
-                            rules={{ required: 'Water is required' }}
-                            render={({ field }) => (
-                                <div className="appointment-form__field">
-                                    <TextField
-                                        {...field}
-                                        label="Water"
-                                        type="number"
-                                        fullWidth
-                                        error={!!errors.water}
-                                        helperText={errors.water?.message}
                                     />
                                 </div>
                             )}
@@ -372,7 +364,7 @@ const Appointment = () => {
                             Cancel
                         </Button>
                         <Button type=" " variant="contained" color="primary">
-                            {editing.isEditing ? 'Save Changes' : 'Add'}
+                            {editing.isEditing ? 'Save Changes' : 'Add Goal'}
                         </Button>
                     </DialogActions>
                 </form>
@@ -381,4 +373,4 @@ const Appointment = () => {
     );
 };
 
-export default Appointment;
+export default Goal;

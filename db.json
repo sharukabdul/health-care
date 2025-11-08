@@ -42,17 +42,22 @@
   ],
   "appointments": [
     {
-      "id": 6,
-      "doctorName": "asdf",
-      "date": "2025-11-14",
-      "diseaseName": "asdf",
+      "id": 1,
+      "patientName": "venkatesh",
+      "email": "venk@gmail.com",
+      "date": "2025-11-08",
+      "water": "10",
+      "steps": "10",
       "status": "scheduled"
-    },
+    }
+  ],
+  "goals": [
     {
       "id": 2,
-      "doctorName": "asdf",
-      "date": "2025-11-20",
-      "diseaseName": "asdf",
+      "steps": "11",
+      "date": "2025-11-08",
+      "waterIntake": "11",
+      "email": "venk@gmail.com",
       "status": "scheduled"
     }
   ]

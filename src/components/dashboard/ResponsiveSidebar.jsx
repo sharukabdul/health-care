@@ -22,7 +22,8 @@ export default function ResponsiveSidebar({ drawerWidth = 230, mobileOpen, onClo
 
   const menuItems = [
     { text: 'Dashboard', icon: <HomeIcon />, path: '/user/dashboard' },
-    { text: 'Appointments', icon: <HomeIcon />, path: '/user/appointments' },
+    { text: 'Goals Tracker', icon: <HomeIcon />, path: '/user/goals' },
+    { text: 'Healthcare Provider View', icon: <HomeIcon />, path: '/user/appointments' },
     { text: 'My Profile', icon: <PersonIcon />, path: '/user/my-profile' },
     { text: 'Wellness Goals', icon: <TrackChangesIcon />, path: '/user/welness-goals' },
     { text: 'Messages', icon: <MessageIcon />, path: '/user/messages' }

@@ -7,6 +7,7 @@ import Messages from './components/dashboard/Messages';
 import Index from './components/home/Index';
 import Sidebar from './components/dashboard/Sidebar';
 import Appointment from './components/appointments/Appointment';
+import Goal from './components/goals/Goals';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
           <Route path="/user/welness-goals" element={<WelnessGoals />} />
           <Route path="/user/messages" element={<Messages />} />
           <Route path="/user/appointments" element={<Appointment />} />
+          <Route path="/user/goals" element={<Goal />} />
         </Route>
       </Routes>
     </BrowserRouter>
