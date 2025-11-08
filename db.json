@@ -1,0 +1,43 @@
+{
+  "user": {
+    "id": 1,
+    "name": "David"
+  },
+  "stats": [
+    {
+      "id": 1,
+      "title": "Steps",
+      "value": "3620",
+      "sub": "/6000 steps",
+      "percent": 60
+    },
+    {
+      "id": 2,
+      "title": "Active Time",
+      "value": "56",
+      "sub": "/60 mins",
+      "percent": 93,
+      "meta": "1712 Kcal | 1.23km"
+    },
+    {
+      "id": 3,
+      "title": "Sleep",
+      "value": "6.5",
+      "sub": "/8 hrs",
+      "percent": 81,
+      "meta": "11:30 pm - 06:00 am"
+    }
+  ],
+  "reminders": [
+    {
+      "id": 1,
+      "text": "Upcoming: Annual blood test on 23rd Jan 2025"
+    }
+  ],
+  "tips": [
+    {
+      "id": 1,
+      "text": "Stay hydrated! Aim to drink at least 8 glasses of water per day."
+    }
+  ]
+}
