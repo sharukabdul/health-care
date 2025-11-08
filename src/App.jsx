@@ -8,6 +8,9 @@ import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
 import ForgotPassword from "./pages/auth/ForgotPassword";
 import Sidebar from "./components/dashboard/Sidebar";
+import "./App.css";
+import Index from "./components/home/Index";
+import Sidebar from "./components/dashboard/Sidebar";
 
 function App() {
   const RoleLanding = ({ role }) => (
@@ -19,17 +22,17 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Sidebar />}>
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/my-profile" element={<MyProfile />} />
-          <Route path="/welness-goals" element={<WelnessGoals />} />
-          <Route path="/messages" element={<Messages />} />
-          <Route path="/" element={<Login />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/forgot" element={<ForgotPassword />} />
-          <Route path="/doctor" element={<RoleLanding role="Doctor" />} />
-          <Route path="/user" element={<RoleLanding role="User" />} />
+        <Route path="/" element={<Index />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/forgot" element={<ForgotPassword />} />
+        <Route path="/doctor" element={<RoleLanding role="Doctor" />} />
+        <Route path="/user" element={<RoleLanding role="User" />} />
+        <Route path="/user/" element={<Sidebar />}>
+          <Route path="/user/dashboard" element={<Dashboard />} />
+          <Route path="/user/my-profile" element={<MyProfile />} />
+          <Route path="/user/welness-goals" element={<WelnessGoals />} />
+          <Route path="/user/messages" element={<Messages />} />
         </Route>
       </Routes>
     </BrowserRouter>
